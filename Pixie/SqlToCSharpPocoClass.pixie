@@ -1,22 +1,28 @@
 <?xml version="1.0"?>
 <PixieFileV1 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Pattern>\s*
-(?&lt;accessModifier&gt;[^\s]+)
+(?&lt;columnName&gt;[^\s]+)
 \s*
 (?&lt;typeNameString&gt;[^\s]+)
 \s*
-(?&lt;propertyName&gt;[^\s]+)
-\s*
 (?&lt;theRest&gt;[a-zA-Z0-9\s()]+)
-.*</Pattern>
-  <Input>public bool BoolProp { get; set; }
-public int IntProp { get; set; }
-public int? IntNullableProp { get; set; }
-public long LongProp { get; set; }
-public byte ByteProp { get; set; }
-public short ShortProp { get; set; }
-public DateTime DateTimeProp { get; set; }
-public string StringProp { get; set; }</Input>
+.*
+
+</Pattern>
+  <Input>[ArticleId] [int] IDENTITY(1,1) NOT NULL,
+[InsertedBy] [int] NOT NULL,
+[InsertedOn] [datetime] NOT NULL,
+[UpdatedBy] [int] NOT NULL,
+[UpdatedOn] [datetime] NOT NULL,
+[ActiveStatus] [tinyint] NOT NULL,
+[Title] [nvarchar](100) NOT NULL,
+[PublishDate] [datetime] NOT NULL,
+[AuthorId] [int] NOT NULL,
+[PublisherId] [int] NOT NULL,
+[Uri] [nvarchar](1000) NOT NULL,
+[UriHost] [nvarchar](200) NOT NULL,
+[Content] [nvarchar](max) NOT NULL,
+[ContentText] [nvarchar](max) NULL,</Input>
   <ReplacementString />
   <Options>
     <PixieRegexOption Selected="true" OptionName="IgnoreCase" />
@@ -36,42 +42,39 @@ public string StringProp { get; set; }</Input>
 {
   	try
 	{
-		var accessModifier = match.Groups["accessModifier"].Value;
+		var columnName = match.Groups["columnName"].Value;
 		var typeNameString = match.Groups["typeNameString"].Value;
-		var propertyName = match.Groups["propertyName"].Value;
 		var theRest = match.Groups["theRest"].Value;
 
-		var columnType = "nvarhcar(50)";
-		var nullableSwitch = "NOT NULL";
+		columnName = columnName.Trim(']');
+		columnName = columnName.Trim('[');
 
-		if (typeNameString.Contains("?")) {
-			nullableSwitch = "NULL";
-		}
+		typeNameString = typeNameString.Trim(']');
+		typeNameString = typeNameString.Trim('[');
 
-		typeNameString = typeNameString.Replace('?', ' ').Trim();
+		var propertyType = "string";
 
 		if (typeNameString == "int")
-			columnType = "int";
-		else if (typeNameString == "short")
-			columnType = "smallint";
-		else if (typeNameString == "long")
-			columnType = "bigint";
-		else if (typeNameString == "byte")
-			columnType = "tinyint";
-		else if (typeNameString == "DateTime")
-			columnType = "datetime";
-		else if (typeNameString == "Date")
-			columnType = "date";
-		else if (typeNameString == "bool")
-			columnType = "bool";
+			propertyType = "int";
+		else if (typeNameString == "smallint")
+			propertyType = "short";
+		else if (typeNameString == "tinyint")
+			propertyType = "byte";
+		else if (typeNameString == "bigint")
+			propertyType = "long";
+		else if (typeNameString == "datetime")
+			propertyType = "DateTime";
 
+		var nullableTest = "";
 
+		if (!theRest.Contains("NOT NULL") &amp;&amp; !typeNameString.Contains("char"))
+			nullableTest = "?";
 
 		var result = String.Format(
-@"[{0}] [{1}] {2},",
-		propertyName,
-		columnType,
-		nullableSwitch
+@"public {0}{1} {2} {{ get; set; }}",
+		propertyType,
+		nullableTest,
+		columnName
 		);
 
 		return result + Environment.NewLine;
