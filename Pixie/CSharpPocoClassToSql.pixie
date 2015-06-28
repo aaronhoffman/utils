@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<PixieFileV1 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Pattern>\s*
+(?&lt;columnName&gt;[^\s]+)
+\s*
+(?&lt;typeNameString&gt;[^\s]+)
+\s*
+(?&lt;theRest&gt;[a-zA-Z0-9\s()]+)
+.*
+
+</Pattern>
+  <Input>[ArticleId] [int] IDENTITY(1,1) NOT NULL,
+[InsertedBy] [int] NOT NULL,
+[InsertedOn] [datetime] NOT NULL,
+[UpdatedBy] [int] NOT NULL,
+[UpdatedOn] [datetime] NOT NULL,
+[ActiveStatus] [tinyint] NOT NULL,
+[Title] [nvarchar](100) NOT NULL,
+[PublishDate] [datetime] NOT NULL,
+[AuthorId] [int] NOT NULL,
+[PublisherId] [int] NOT NULL,
+[Uri] [nvarchar](1000) NOT NULL,
+[UriHost] [nvarchar](200) NOT NULL,
+[Content] [nvarchar](max) NOT NULL,
+[ContentText] [nvarchar](max) NULL,</Input>
+  <ReplacementString />
+  <Options>
+    <PixieRegexOption Selected="true" OptionName="IgnoreCase" />
+    <PixieRegexOption Selected="false" OptionName="Multiline" />
+    <PixieRegexOption Selected="false" OptionName="ExplicitCapture" />
+    <PixieRegexOption Selected="false" OptionName="Singleline" />
+    <PixieRegexOption Selected="true" OptionName="IgnorePatternWhitespace" />
+    <PixieRegexOption Selected="false" OptionName="RightToLeft" />
+    <PixieRegexOption Selected="false" OptionName="ECMAScript" />
+    <PixieRegexOption Selected="false" OptionName="CultureInvariant" />
+  </Options>
+  <ReplaceLiveOutput>true</ReplaceLiveOutput>
+  <HighlightLiveOutput>true</HighlightLiveOutput>
+  <PopulateReplacement>true</PopulateReplacement>
+  <UseCodeReplacement>true</UseCodeReplacement>
+  <ReplacementCode>public string Replace(Match match)
+{
+  	try
+	{
+		var columnName = match.Groups["columnName"].Value;
+		var typeNameString = match.Groups["typeNameString"].Value;
+		var theRest = match.Groups["theRest"].Value;
+
+		columnName = columnName.Trim(']');
+		columnName = columnName.Trim('[');
+
+		typeNameString = typeNameString.Trim(']');
+		typeNameString = typeNameString.Trim('[');
+
+		var propertyType = "string";
+
+		if (typeNameString == "int")
+			propertyType = "int";
+		else if (typeNameString == "smallint")
+			propertyType = "short";
+		else if (typeNameString == "tinyint")
+			propertyType = "byte";
+		else if (typeNameString == "datetime")
+			propertyType = "DateTime";
+
+		var nullableTest = "";
+
+		if (!theRest.Contains("NOT NULL") &amp;&amp; !typeNameString.Contains("char"))
+			nullableTest = "?";
+
+		var result = String.Format(
+@"public {0}{1} {2} {{ get; set; }}",
+		propertyType,
+		nullableTest,
+		columnName
+		);
+
+		return result + Environment.NewLine;
+	}
+	catch (Exception ex)
+	{
+		return ex.ToString();
+	}
+
+	return "// oops";
+}</ReplacementCode>
+</PixieFileV1>

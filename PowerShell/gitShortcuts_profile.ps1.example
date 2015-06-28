@@ -1,0 +1,29 @@
+
+# append these lines to the profile.ps1 file at %userprofile%\Documents\WindowsPowerShell\
+
+function gs() {
+	git status
+}
+
+function ga() {
+	git add -A
+}
+
+function gcom() {
+	git commit --verbose --message $args[0]
+}
+
+function gch() {
+	# checkout command commonly used for branching
+	if(-not($args[1])) {
+		git checkout $args[0]
+	}
+	else {
+		git checkout $args[0] $args[1]	
+	}
+}
+
+function grh() {
+	git reset --hard
+	git clean --force
+}

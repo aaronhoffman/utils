@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<PixieFileV1 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Pattern>\s*
+(?&lt;accessModifier&gt;[^\s]+)
+\s*
+(?&lt;typeNameString&gt;[^\s]+)
+\s*
+(?&lt;propertyNameString&gt;[^\s]+)
+.*
+
+</Pattern>
+  <Input> public Guid FileModelReference { get; set; }
+
+public DateTime CreatedOn { get; set; }
+
+	public string CreatedBy { get; set; }
+
+public DateTime UpdatedOn { get; set; }
+public string UpdatedBy { get; set; }
+public string FileName { get; set; }
+public string Path { get; set; }
+public string Extension { get; set; }
+public int Size { get; set; }
+
+</Input>
+  <ReplacementString />
+  <Options>
+    <PixieRegexOption Selected="true" OptionName="IgnoreCase" />
+    <PixieRegexOption Selected="false" OptionName="Multiline" />
+    <PixieRegexOption Selected="false" OptionName="ExplicitCapture" />
+    <PixieRegexOption Selected="false" OptionName="Singleline" />
+    <PixieRegexOption Selected="true" OptionName="IgnorePatternWhitespace" />
+    <PixieRegexOption Selected="false" OptionName="RightToLeft" />
+    <PixieRegexOption Selected="false" OptionName="ECMAScript" />
+    <PixieRegexOption Selected="false" OptionName="CultureInvariant" />
+  </Options>
+  <ReplaceLiveOutput>true</ReplaceLiveOutput>
+  <HighlightLiveOutput>true</HighlightLiveOutput>
+  <PopulateReplacement>true</PopulateReplacement>
+  <UseCodeReplacement>true</UseCodeReplacement>
+  <ReplacementCode>public string Replace(Match match)
+{
+  	try
+	{
+		var typeNameString = match.Groups["typeNameString"].Value;
+		var propertyNameString = match.Groups["propertyNameString"].Value;
+
+		var result = String.Format(
+@"public {0} {1}
+{{
+	get {{ return this._{1}; }}
+	set
+	{{
+		if (this._{1} != value)
+		{{
+			this._{1} = value;
+			this.OnPropertyChanged(this.PropertyChanged, {1}PropertyName);
+		}}
+	}}
+}}
+private {0} _{1};
+public const string {1}PropertyName = ""{1}"";
+
+",
+		typeNameString,
+		propertyNameString);
+
+		return result;
+	}
+	catch (Exception ex)
+	{
+		return ex.ToString();
+	}
+
+	return "// oops";
+}</ReplacementCode>
+</PixieFileV1>
