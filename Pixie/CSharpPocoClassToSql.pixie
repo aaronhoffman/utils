@@ -64,6 +64,8 @@ public bool BoolProp { get; set; }</Input>
 			columnType = "DATETIME";
 		else if (typeNameString == "bool")
 			columnType = "BIT";
+		else if (typeNameString == "double")
+			columnType = "FLOAT";
 
 		var result = String.Format(
 		@"[{0}] {1} {2},",
