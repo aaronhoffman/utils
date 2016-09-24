@@ -62,9 +62,19 @@
 			propertyType = "byte";
 		else if (typeNameString == "bigint")
 			propertyType = "long";
-		else if (typeNameString == "datetime")
+		else if (typeNameString.Contains("datetime"))
 			propertyType = "DateTime";
-
+		else if (typeNameString == "date")
+			propertyType = "DateTime";
+		else if (typeNameString == "float")
+			propertyType = "double";
+		else if (typeNameString == "numeric")
+			propertyType = "double";
+		else if (typeNameString == "bit")
+			propertyType = "boolean";
+		else if (typeNameString == "uniqueidentifier")
+			propertyType = "Guid";
+			
 		var nullableTest = "";
 
 		if (!theRest.Contains("NOT NULL") &amp;&amp; !typeNameString.Contains("char"))
