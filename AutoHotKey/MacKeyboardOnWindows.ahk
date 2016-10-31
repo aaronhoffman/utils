@@ -30,17 +30,18 @@ F15::SendInput {Pause}
 ;# & Tab::AltTab
 
 ; Map Windows+Key to ctrl+Key
-#s::^s
-#a::^a
-#c::^c
-#v::^v
-#x::^x
-#o::^o
+#.::Send ^.
+#s::Send ^s
+#a::Send ^a
+#c::Send ^c
+#v::Send ^v
+#x::Send ^x
+#o::Send ^o
 #f::Send ^f
-#z::^z
-#y::^y
-#t::^t
-#w::^w
+#z::Send ^z
+#y::Send ^y
+#t::Send ^t
+#w::Send ^w
 #q::Send !{F4}
 
 ; Windows Arrow to Home/End
