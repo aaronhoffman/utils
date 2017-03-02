@@ -77,3 +77,6 @@ NumpadMult::NumpadSub
 
 ; change - to *
 NumpadSub::NumpadMult
+
+; context menu in windows explorer
++Return::SendInput +{F10}
