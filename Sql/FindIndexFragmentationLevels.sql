@@ -12,7 +12,7 @@ SELECT
 ,ips.index_type_desc 
 ,ips.avg_fragmentation_in_percent 
 
-, 'ALTER INDEX ALL ON ' + OBJECT_NAME(ps.object_id) + ' REBUILD'  as Rebuild_Commands-- generate the commands to rebuild indexes
+, 'ALTER INDEX [' + i.name + '] ON [' + OBJECT_NAME(ps.object_id) + '] REBUILD'  as Rebuild_Commands-- generate the commands to rebuild indexes
 
 --,ips.*
 --,'' spc
