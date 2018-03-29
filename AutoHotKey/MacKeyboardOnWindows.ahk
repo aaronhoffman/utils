@@ -51,10 +51,10 @@ F15::SendInput {Pause}
 #+Right::Send +{End}
 
 ; Option Arrow to Ctrl Arrow
-#!Left::SendInput ^{Left}
-#!Right::SendInput ^{Right}
-#!+Left::SendInput ^+{Left}
-#!+Right::SendInput ^+{Right}
+!Left::SendInput ^{Left}
+!Right::SendInput ^{Right}
+!+Left::SendInput ^+{Left}
+!+Right::SendInput ^+{Right}
 
 ; Refresh in chrome
 #r::Send ^r
