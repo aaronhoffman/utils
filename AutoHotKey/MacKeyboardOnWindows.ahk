@@ -51,13 +51,13 @@ F15::SendInput {Pause}
 #+Right::Send +{End}
 
 ; Option Arrow to Ctrl Arrow
-!Left::SendInput ^{Left}
-!Right::SendInput ^{Right}
-!+Left::SendInput ^+{Left}
-!+Right::SendInput ^+{Right}
+#!Left::SendInput ^{Left}
+#!Right::SendInput ^{Right}
+#!+Left::SendInput ^+{Left}
+#!+Right::SendInput ^+{Right}
 
 ; Refresh in chrome
-#r::^r
+#r::Send ^r
 
 ; Address/location bar in chrome (this does not work due to Windows Lock feature)
 ; #l::^l
@@ -78,5 +78,5 @@ NumpadMult::NumpadSub
 ; change - to *
 NumpadSub::NumpadMult
 
-; context menu in windows explorer
+; easy context menu in windows explorer
 +Return::SendInput +{F10}
